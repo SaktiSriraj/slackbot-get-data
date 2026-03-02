@@ -8,7 +8,7 @@ load_dotenv()
 llm = ChatOpenAI(
     base_url="https://router.huggingface.co/v1",
     api_key=os.environ["HF_TOKEN"],
-    model="Qwen/Qwen2.5-Coder-32B-Instruct:novita",
+    model="Qwen/Qwen2.5-Coder-32B-Instruct:faster",
     temperature=0.1,
 )
 
