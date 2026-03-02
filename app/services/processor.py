@@ -35,9 +35,15 @@ Rules:
     e.g. if the question asks about highest revenue, include SUM(revenue) AS total_revenue
   - NEVER return just one column unless the question explicitly asks for only one value
   - Always use meaningful aliases for aggregated columns
-    e.g. SUM(revenue) AS total_revenue, SUM(orders) AS total_orders, COUNT(*) AS total_records
+    e.g. SUM(revenue) AS total_revenue, SUM(orders) AS total_orders
   - When the question asks for maximum or minimum of something,
     always SELECT both the group column AND the aggregated metric
+  - ONLY answer questions related to the sales_daily table and its data
+  - If the question is not related to the database or sales data,
+    respond with exactly this text and nothing else:
+    INVALID_QUERY: This question is not related to the sales database.
+  - NEVER use SELECT with hardcoded string literals as answers
+  - NEVER answer general knowledge questions, only database questions
 """
 
 prompt = ChatPromptTemplate.from_messages([
@@ -52,6 +58,11 @@ def process_question(question: str) -> tuple:
     try:
         response = chain.invoke({"question": question})
         sql = response.content.strip()
+
+        # Reject Non-DB Questions
+        if sql.startswith("INVALID_QUERY"):
+            return None, sql
+
         return sql, None
     except Exception as e:
         return None, str(e)
