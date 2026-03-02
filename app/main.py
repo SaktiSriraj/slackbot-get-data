@@ -13,6 +13,7 @@ async def main():
     return "APP RUNNING"
 
 @app.get("/health")
+@app.head("/health") 
 async def health():
     return {"status": "ok"}
 
