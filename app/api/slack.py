@@ -9,7 +9,6 @@ from app.services.cache import get_cached, set_cache, clear_cache
 
 router = APIRouter()
 
-
 async def handle_question(response_url: str, question: str):
     cached = get_cached(question)
     if cached:
@@ -20,13 +19,13 @@ async def handle_question(response_url: str, question: str):
 
     try:
         sql, err = process_question(question)
-        print(f"Generated SQL: {sql}, Error: {err}")  # ← add this
+        print(f"Generated SQL: {sql}, Error: {err}")
 
         if err:
             message = format_error(err)
         else:
             data, err = run_query(sql)
-            print(f"Query data: {data}, Error: {err}")  # ← add this
+            print(f"Query data: {data}, Error: {err}")
             if err:
                 message = format_error(err, sql)
             else:
@@ -34,7 +33,7 @@ async def handle_question(response_url: str, question: str):
                 set_cache(question, message, sql)
 
     except Exception as e:
-        print(f"CRITICAL ERROR: {str(e)}")             # ← add this
+        print(f"CRITICAL ERROR: {str(e)}")
         message = format_error(str(e))
 
     async with httpx.AsyncClient() as client:
