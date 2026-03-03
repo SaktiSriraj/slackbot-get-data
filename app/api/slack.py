@@ -54,16 +54,21 @@ async def ask_data(
         "text": f":hourglass: Processing: `{text}`..."
     }
 
-
-@router.post("/clear-cache")
-async def clear_cache_command(
-    response_url: str = Form(...)
-):
-    clear_cache()
+async def handle_clear_cache(response_url: str):
+    await asyncio.sleep(2)  # ← wait for Slack to render the command
     async with httpx.AsyncClient() as client:
         await client.post(response_url, json={
             "text": ":broom: *Cache cleared!* Next queries will fetch fresh data from the database."
         })
+
+@router.post("/clear-cache")
+async def clear_cache_command(
+    response: Response,
+    response_url: str = Form(...)
+):
+    response.headers["X-Slack-No-Retry"] = "1"
+    clear_cache()
+    asyncio.create_task(handle_clear_cache(response_url)) 
     return {
         "response_type": "in_channel",
         "text": ":hourglass: Clearing cache..."
