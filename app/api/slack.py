@@ -56,10 +56,8 @@ async def ask_data(
 
 @router.post("/clear-cache")
 async def clear_cache_command(
-    response: Response,
     response_url: str = Form(...)
 ):
-    response.headers["X-Slack-No-Retry"] = "1"
     clear_cache()
     async with httpx.AsyncClient() as client:
         await client.post(response_url, json={
