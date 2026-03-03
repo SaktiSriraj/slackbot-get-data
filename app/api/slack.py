@@ -5,7 +5,7 @@ from app.services.processor import process_question
 from app.services.query_executor import run_query
 from app.utils.formatter import format_error, format_results
 from fastapi import APIRouter, Form
-from services.cache import get_cached, set_cache, clear_cache
+from app.services.cache import get_cached, set_cache, clear_cache
 
 router = APIRouter()
 
