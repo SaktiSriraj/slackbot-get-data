@@ -31,6 +31,7 @@ async def handle_question(response_url: str, question: str):
                 message = format_error(err, sql)
             else:
                 message = format_results(data, sql)
+                set_cache(question, message, sql)
 
     except Exception as e:
         print(f"CRITICAL ERROR: {str(e)}")             # ← add this
