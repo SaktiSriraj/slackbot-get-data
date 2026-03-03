@@ -12,7 +12,7 @@ router = APIRouter()
 async def handle_question(response_url: str, question: str):
     cached = get_cached(question)
     if cached:
-        message = cached["result"] + f"/n/n Cached result from {cached['cached_at']}_"
+        message = cached["result"] + f"\n\nCached result from {cached['cached_at']}_"
         async with httpx.AsyncClient() as client:
             await client.post(response_url, json={"text": message})
         return

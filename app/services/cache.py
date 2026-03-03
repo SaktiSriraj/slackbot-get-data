@@ -22,7 +22,9 @@ def get_cached(question: str) -> dict | None:
             print(f"CACHE MISS: '{key}'")
             return None
         print(f"CACHE HIT: '{key}'")
-        return json.loads(data)
+        entry = json.loads(data)
+        entry["result"] = entry["result"].encode().decode('unicode_escape')
+        return entry
     except Exception as e:
         print(f"CACHE GET ERROR: {str(e)}")
         return None
